@@ -33,7 +33,7 @@ class problem3_카페확장 {
 
             answer = Math.max(answer, num);
 
-            timer--;
+            timer = Math.max(0, timer - 1);
             nowTime++;
         }
 
