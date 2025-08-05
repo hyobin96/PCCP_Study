@@ -1,0 +1,61 @@
+// 풀이 시간: 30분
+// 시간 복잡도: O(N), N은 numbers 크기
+// 코드 설명: 1, 4, 7 / 3, 6, 9 는 고정 값이니까 빼고, 2, 5, 8, 0 일 때, 현재 왼손, 현재 오른손 위치 좌표화 해놔서 계산하고, 왼손잡인지 오른손 잡인지 해가지고 구함.
+// 취약한 부분: 거리 계산을 좀 이쁘게 할 수 있으면 좋을 것 같은데 효형이 가르쳐 주겠지?
+
+import java.util.*;
+
+class Solution {
+    public String solution(int[] numbers, String hand) {
+        String answer = "";
+        
+        int[][] pos = { 
+                          {3, 1},
+                          {0, 0}, {0, 1}, {0, 2},
+                          {1, 0}, {1, 1}, {1, 2},
+                          {2, 0}, {2, 1}, {2, 2},
+                      };
+        StringBuilder sb = new StringBuilder();
+        
+        int[] currLeft  = {3, 0};
+        int[] currRight = {3, 2};
+        
+        for(int i=0;i<numbers.length;i++){
+            if(numbers[i] == 1 || numbers[i] == 4 || numbers[i] == 7){
+                sb.append("L");
+                currLeft = pos[numbers[i]];                    
+            }
+            
+            else if(numbers[i] == 3 || numbers[i] == 6 || numbers[i] == 9){
+                sb.append("R");
+                currRight = pos[numbers[i]];
+            }
+            
+            else {
+                if(Math.abs(pos[numbers[i]][0] - currLeft[0]) + Math.abs(pos[numbers[i]][1] - currLeft[1]) > Math.abs(pos[numbers[i]][0] - currRight[0]) + Math.abs(pos[numbers[i]][1] - currRight[1]) ) {
+                    sb.append("R");
+                    currRight = pos[numbers[i]];
+                }
+                else if(Math.abs(pos[numbers[i]][0] - currLeft[0]) + Math.abs(pos[numbers[i]][1] - currLeft[1]) < Math.abs(pos[numbers[i]][0] - currRight[0]) + Math.abs(pos[numbers[i]][1] - currRight[1])) {
+                    sb.append("L");   
+                    currLeft = pos[numbers[i]];
+                }
+                else {
+                    if (hand.equals("left")) {
+                        sb.append("L");
+                        currLeft = pos[numbers[i]];
+                    }
+                    else {
+                        sb.append("R");
+                        currRight = pos[numbers[i]];
+                    }
+                }
+                    
+                
+                
+            }
+        }
+        answer = sb.toString();
+        return answer;
+    }
+}
