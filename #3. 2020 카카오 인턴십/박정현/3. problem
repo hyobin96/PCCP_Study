@@ -1,0 +1,46 @@
+// 풀이 시간: 90분
+// 시간 복잡도: O(N);
+// 코드 설명: left, right 포인터 두개 해서 모든 종류 하나씩 안모였으면 right 올려, 다 모였으면 left 올려 그러면서 최소 거리가 정답임 ㅇㅋ?
+// 취약한 부분: 민정이 짱짱걸 힌트 받았음다 ㅅㄱ
+
+import java.util.*;
+
+class Solution {
+    public int[] solution(String[] gems) {
+        int[] answer = new int[2];
+        Set<String> set = new TreeSet<>();
+        
+        for(String str : gems){
+            set.add(str);
+        }
+        
+        Map<String, Integer> map = new HashMap<>();
+        map.put(gems[0], 1);
+        int left = 0;
+        int right = 0;
+        while(left < gems.length){
+            if(map.size() < set.size()){
+                right++;
+                if (right == gems.length) break;
+                map.put(gems[right], map.getOrDefault(gems[right], 0) + 1);
+            } else {
+                if(answer[1] == 0 && answer[0] == 0) {
+                    answer[1] = right+1;
+                    answer[0] = left+1;
+                }
+                if(right - left < answer[1] - answer[0]) {
+                    answer[1] = right+1;
+                    answer[0] = left+1;
+                }
+                if(map.get(gems[left]) == 1) map.remove(gems[left]);
+                else {
+                    map.put(gems[left], map.getOrDefault(gems[left], 0) - 1);
+                }
+                left++;
+            }
+        }
+        
+        
+        return answer;
+    }
+}
