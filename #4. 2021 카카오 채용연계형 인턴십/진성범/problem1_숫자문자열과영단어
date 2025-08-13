@@ -1,0 +1,64 @@
+# 풀이 시간: 30분
+# 시간 복잡도: O(N^2)
+# 코드 설명: 숫자 인지 확인하고 숫자면 바로 결과값에 더하고 숫자가 아니면 문자하나하나 더해서 숫자로 바꾼다.
+# 취약한 부분: replaceAll을 쓰면 10줄 미만으로 할수있던데,, 거기까진 생각을 못했다.
+
+import java.util.*;
+class Solution {
+    String[] numbers = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
+    public int solution(String s) {
+        int answer = 0;
+        String answerStr = "";
+        
+        int idx = 0;
+        outer:
+        while(true) {
+            int a = s.charAt(idx);
+            if(a >= '0' && a <= '9') {
+                answerStr += s.charAt(idx);
+                idx++;
+            } else {
+                String num = "";
+                while(true) {
+                    if(s.charAt(idx) >= '0' && s.charAt(idx) <= '9') {
+                        answerStr += changeNum(num);
+                        break;
+                    }
+                    num += s.charAt(idx++);
+                    if(idx == s.length()) {
+                        answerStr += changeNum(num);
+                        break outer;
+                    }
+                    if(findNum(num)) {
+                        answerStr += changeNum(num);
+                        num = "";
+                    }
+                }
+            }
+            if(idx == s.length()) {
+                break;
+            }
+        }
+        answer = Integer.parseInt(answerStr);
+        return answer;
+    }
+    
+    boolean findNum(String num) {
+        for(int i = 0; i < numbers.length; i++) {
+            if(numbers[i].equals(num)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    String changeNum(String num) {
+        String tmpNum = "";
+        for(int i = 0; i < numbers.length; i++) {
+            if(numbers[i].equals(num)) {
+                tmpNum = String.valueOf(i);
+            }
+        }
+        return tmpNum;
+    }
+}
