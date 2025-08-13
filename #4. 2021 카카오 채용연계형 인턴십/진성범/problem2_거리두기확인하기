@@ -1,0 +1,78 @@
+# 풀이 시간: 40분
+# 시간 복잡도:  O(D²)
+# 코드 설명: bfs로 모든 P가 되는지 확인
+# 취약한 부분: 더 간단한 풀이가 있지않을까..?
+
+import java.util.*;
+class Solution {
+    boolean[][] visited;
+    char[][] sits;
+    int[] dr = {-1, 1, 0, 0};
+    int[] dc = {0, 0, -1, 1};
+    public int[] solution(String[][] places) {
+        int[] answer = new int[5];
+        for(int i = 0; i < 5; i++) {
+            //sits 배열에 담기
+            sits = new char[5][5];
+            for(int j = 0; j < 5; j++) {
+                for(int k = 0; k < 5; k++) {
+                    sits[j][k] = places[i][j].charAt(k);
+                }
+            }
+            //sits 배열안에서 bfs 돌리기
+            boolean distancing = true;
+            outer:
+            for(int j = 0; j < 5; j++) {
+                for(int k = 0; k < 5; k++) {
+                    if(sits[j][k] == 'P') {
+                        visited = new boolean[5][5];
+                        boolean check = bfs(j, k, sits);
+                        if(check == false) {
+                            distancing = false;
+                            break outer;
+                        }
+                    }
+                }
+            }
+            if(distancing) answer[i] = 1;
+            else answer[i] = 0;
+        }
+        return answer;
+    }
+    
+    boolean bfs(int x, int y, char[][] sits) {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{x, y});
+        visited[x][y] = true;
+        
+        boolean answer = true;
+        int count = 0;
+        
+        outer:
+        while(!queue.isEmpty()) {
+            int size = queue.size();
+            for(int i = 0; i < size; i++) {
+                int[] now_node = queue.poll();
+                for(int j = 0; j < 4; j++) {
+                    int r = now_node[0] + dr[j];
+                    int c = now_node[1] + dc[j];
+                    if(r >= 0 && r < 5 && c >= 0 && c < 5 && !visited[r][c]) {
+                        if(sits[r][c] == 'O') {
+                            queue.add(new int[]{r, c});
+                            visited[r][c] = true;
+                        } else if(sits[r][c] == 'P') {
+                            answer = false;
+                            break outer;
+                        }
+                        
+                    }
+                }
+            }
+            count++;
+            if(count == 2) {
+                break;
+            }
+        }
+        return answer;
+    }
+}
