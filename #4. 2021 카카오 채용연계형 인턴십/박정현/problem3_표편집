@@ -1,0 +1,59 @@
+// 1. 풀이 시간: 60분
+// 2.
+//  LinkedList.remove(idx) / list.add(idx, val)는 인덱스까지 선형 탐색 → O(N)
+//  명령이 M개면 최악 O(M·N). 문제(표 편집)는 M이 최대 20만이라 이 방식은 효율성 탈락 확정.
+//  이렇다함....
+// 3. 코드 설명:
+//  LinkedList를 사용해. 일단 전부 X를 박아놓고, 시키는 대로 잘 진행 해. 그러고 마지막에 list에 남아 있는 애들은 처음과 비교해서 바뀌지 않은 애들이니 O로 바꿔줘.
+// 4. 취약한 부분: 정확도 5점, 효율성 0점짜리의 코드임. 일단 올려 봤읍니다 :)
+// 지피티 : 스스로 잘 짚었고, 실제로 효율성 0점 나오는 구조임.(?)
+
+import java.util.*;
+
+class Solution {
+    List<Integer> list;
+    
+    public String solution(int n, int k, String[] cmd) {
+        int idx = k;
+        Stack<int[]> stack = new Stack<>();
+        list = new LinkedList<>();
+        for(int i=0;i<n;i++){
+            list.add(i);
+        }
+        
+        for(String str : cmd){
+            if(str.equals("C")){
+                int temp = list.remove(idx);
+                stack.push(new int[] {idx, temp});
+                if (idx == list.size() - 1) idx--;
+                // System.out.println(stack.peek()[0] + "번 idx, " + stack.peek()[1] + "삭제");
+                // System.out.println(list);
+            } else if(str.equals("Z")){
+                int[] curr = stack.pop();
+                list.add(curr[0], curr[1]);
+                // System.out.println(curr[0] + "번 idx, " + curr[1] + "추가");
+                // System.out.println(list);
+            } else if(str.charAt(0) == 'U'){
+                str = str.substring(2);
+                // System.out.println("-" + str);
+                idx -= Integer.parseInt(str);
+            } else if(str.charAt(0) == 'D'){
+                str = str.substring(2);
+                // System.out.println("+" + str);
+                idx += Integer.parseInt(str);
+            }
+        }
+        
+        // System.out.println(list);
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<n;i++){
+            sb.append("X");
+        }
+        for(int i : list){
+            sb.deleteCharAt(i);
+            sb.insert(i, "O");
+        }
+        
+        return sb.toString();
+    }
+}
