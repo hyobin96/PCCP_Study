@@ -1,0 +1,39 @@
+// 1. 풀이 시간: 30분
+// 2. 시간 복잡도: O(N) 일듯?
+// 3. 코드 설명:
+//  String을 일단 전부 charAt으로 돌려.
+//  숫자가 아니면은 StringBuilder에 append하면서 단어를 만들어,
+//  map에 0~9까지 영어로 담아놓고, StringBuilder 값이 map 안에 있는 거 나오면 숫자로 바꿔.
+// 4. 취약한 부분: 아름답다.
+
+import java.util.*;
+
+class Solution {
+    public int solution(String s) {
+        int answer = 0;
+        StringBuilder temp = new StringBuilder();
+        
+        StringBuilder sb = new StringBuilder();
+        
+        Map<String, Integer> map = new HashMap<>();
+        
+        map.put("zero", 0); map.put("one", 1); map.put("two", 2); map.put("three", 3); 
+        map.put("four", 4); map.put("five", 5); map.put("six", 6); 
+        map.put("seven", 7); map.put("eight", 8); map.put("nine", 9); 
+        
+        for(int i=0;i<s.length();i++){
+            char c = s.charAt(i);
+            if(c < '0' || c > '9'){
+                sb.append(String.valueOf(c));
+                if(map.containsKey(sb.toString())) {
+                    temp.append(String.valueOf(map.get(sb.toString())));
+                    sb.setLength(0);
+                } 
+            } else {
+                temp.append(String.valueOf(c));
+            }
+        }
+        
+        return answer = Integer.parseInt(temp.toString());
+    }
+}
