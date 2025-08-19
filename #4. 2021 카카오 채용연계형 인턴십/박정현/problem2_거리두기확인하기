@@ -1,0 +1,71 @@
+// 1. 풀이 시간: 60분
+// 2. 시간 복잡도: O(N) 일듯?
+// 3. 코드 설명: bfs를 돌릴거야. places를 돌면서 이제 P를 만난다 -> 조건에 맞게 잘 배치 되어있는지 확인
+// 4. 취약한 부분: 와 처음에 queue에 P 위치들을 전부 다 넣었다가 식겁함. 이거 해결하느라 힘들었다.... 
+
+import java.util.*;
+
+class Solution {
+    boolean[][]  visited;
+    Queue<int[]> q;
+    int[] dr = {-1, 0, 1, 0};
+    int[] dc = {0, 1, 0, -1};
+    String[] pplaces;
+    
+    public int[] solution(String[][] places) {
+        
+        int[] answer = new int[5];
+        for(int i=0; i<5; i++) {
+            pplaces = places[i];
+            boolean flag = true;
+            outer:for(int r=0;r<5;r++){
+                for(int c=0;c<5;c++){
+                    if(pplaces[r].charAt(c)=='P') {
+                        visited = new boolean[5][5];
+                        q = new LinkedList<>();
+                        if (bfs(r, c) == 0) {
+                            flag = false;
+                            break outer;
+                        }
+                    }
+                }
+            }
+            if (flag) answer[i] = 1;
+            else answer[i] = 0;
+            // answer[i] = bfs();
+        }
+        
+        return answer;
+    }
+    
+    public int bfs(int r, int c) {
+        q.add(new int[] {r, c});
+        int dist = 0;
+        
+        while(!q.isEmpty()){
+            
+            if (dist == 2) return 1;
+            
+            int size = q.size();
+            for(int i=0;i<size;i++){
+                int[] curr = q.poll();
+                visited[curr[0]][curr[1]] = true;
+                
+                for(int d=0; d<4; d++){
+                    int nr = curr[0] + dr[d];
+                    int nc = curr[1] + dc[d];
+                    if(nr < 0 || nr >= 5 || nc < 0 || nc >= 5) continue;
+                    
+                    if(visited[nr][nc]) continue;
+                    if(pplaces[nr].charAt(nc)=='X') continue;
+                    if(pplaces[nr].charAt(nc)=='P') return 0;
+                    
+                    q.add(new int[] {nr, nc});
+                    visited[nr][nc] = true;
+                }
+            }
+            dist++;
+        }
+        return 1;
+    }
+}
