@@ -1,0 +1,42 @@
+//풀이 시간 : 30분
+//시간복잡도 : O(N²)
+//코드 설명 : treeset을 통해 내부에서 정렬을 시키고, check함수를 통해 이전에 등장한 단어인지 체크
+//취약한 부분 : 흐음.. 더 고민한뒤 깔끔하게 가는게 맞을듯
+
+import java.util.*;
+class Solution {
+    List<Character> list;
+    public String solution(String input_string) {
+        String answer = "";
+        TreeSet<Character> set = new TreeSet<>();
+        list = new ArrayList<>();
+        char tmpLetter = ' ';
+        for(int i = 0; i < input_string.length(); i++) {
+            char letter = input_string.charAt(i);
+            if(check(letter) && tmpLetter != letter) { //2회이상 나타났고 이전단어랑 겹치지 않으면
+                set.add(letter);
+            } else {
+                list.add(letter);
+            }
+            tmpLetter = letter;
+        }
+        for(char c : set) {
+            answer += c;
+        }
+        
+        if(answer.equals("")) {
+            return "N";
+        } else {
+            return answer;
+        }
+    }
+    
+    boolean check(char c) { //2회 이상 나타났는지 체크
+        for(int i = 0; i < list.size(); i++) {
+            if(list.get(i) == c) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
