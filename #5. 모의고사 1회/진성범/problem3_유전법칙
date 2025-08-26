@@ -1,0 +1,39 @@
+// 풀이 시간 : 40분 
+// 시간복잡도 : O(q×n)
+// 코드 설명 : 거꾸로 올라오면서 내려가는 스텝을 저장해놓고 위에서 시작해서 그 스텝대로 내려감.
+// 취약한 부분 : 스텝을 저장해서 다시 내려가겠다는 생각을 못했다..
+
+class Solution {
+    public String[] solution(int[][] queries) {
+        String[] result = new String[queries.length];
+        for (int i = 0; i < queries.length; i++) {
+            int n = queries[i][0]; // 세대
+            int p = queries[i][1]; // 위치
+            result[i] = getGene(n, p);
+        }
+        return result;
+    }
+
+   
+    private String getGene(int n, int p) {
+        if (n == 1) return "Rr";
+
+        int x = p - 1; //위치
+        int num = n - 1; //내려가는 횟수
+        int[] stepNum = new int[num]; //내려가는 스텝 저장
+
+        for (int i = num - 1; i >= 0; i--) { //역으로 올라오면서 스텝저장
+            stepNum[i] = x % 4;
+            x /= 4;
+        }
+
+        String gene = "Rr";     //1세대부터 시작
+        for (int d : stepNum) {
+            if (!gene.equals("Rr")) break; //순종이면 이후 고정
+            if (d == 0) gene = "RR";
+            else if (d == 3) gene = "rr";
+            // d==1,2 이면 여전히 Rr
+        }
+        return gene;
+    }
+}
