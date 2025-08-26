@@ -1,0 +1,31 @@
+// 풀이시간 : 30분
+// 시간 복잡도 : O(N^M)
+// 코드 설명 : dfs + 백트래킹
+// 취약한 부분 : 조합이나 순열 까먹었는데 코드좀 확인해봐야겠당..
+
+class Solution {
+    int answer = 0;
+    boolean[] visited;
+    public int solution(int[][] ability) {
+        visited = new boolean[ability.length];
+        dfs(ability, 0, 0);
+        return answer;
+    }
+
+    //idx : 종목 번호
+    //sum : 능력치 합
+    private void dfs(int[][] ability, int idx, int sum) {
+        if (idx == ability[0].length) { //모든 종목을 다 고른 경우
+            answer = Math.max(answer, sum);
+            return;
+        }
+
+        for (int i = 0; i < ability.length; i++) {
+            if (!visited[i]) { //아직 안 뽑힌 학생만 선택
+                visited[i] = true;
+                dfs(ability, idx + 1, sum + ability[i][idx]);
+                visited[i] = false;
+            }
+        }
+    }
+}
