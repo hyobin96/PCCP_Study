@@ -1,0 +1,45 @@
+// 풀이 시간 : 40분
+// 시간 복잡도 : O(n)
+// 코드 설명 : 두 큐를 이어서 하나의 배열로 만든다음 투포인터를 통해 합이 딱 절반이 되는 부분 탐색
+// 취약한 부분 : 처음에는 투포인터를 쓸생각을 전혀 못함..
+
+import java.util.*;
+class Solution {
+    public int solution(int[] queue1, int[] queue2) {
+        int len1 = queue1.length;
+        int len2 = queue2.length;
+        int[] arr = new int[len1 + len2];
+        long totalSum = 0;
+        long sum = 0;
+        for(int i = 0; i < arr.length; i++) {
+            if(i < len1) {
+                arr[i] = queue1[i];
+                totalSum += arr[i];
+                sum += arr[i];
+            } else {
+                arr[i] = queue2[i - len1];
+                totalSum += arr[i];
+            }
+        }
+        if(totalSum % 2 == 1) return -1;
+        long target = totalSum / 2;
+        int maxCount = len1 * 2;
+        
+        int start = 0;
+        int end = len1 - 1;
+        int cnt = 0;
+        while(cnt <= maxCount && start <= end && end + 1 < arr.length) {
+            if(sum == target) return cnt;
+            
+            if (sum > target) {
+                sum -= arr[start];
+                start++;
+            } else {
+                end++;
+                sum += arr[end];
+            }
+            cnt++;
+        }
+        return -1;
+    }
+}
