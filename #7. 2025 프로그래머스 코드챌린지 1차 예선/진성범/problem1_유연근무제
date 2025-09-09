@@ -1,0 +1,33 @@
+//풀이 시간 : 15분
+//시간 복잡도 : O(n)
+//코드 설명 : 완전탐색
+//취약한 부분 :
+
+import java.util.*;
+class Solution {
+    public int solution(int[] schedules, int[][] timelogs, int startday) {
+        int answer = 0; //정각 출근한 직원수 카운트
+        int idx = 0; //직원번호
+        int len = schedules.length;
+        
+        for(int i = 0; i < len; i++) { //스케쥴 하나하나
+            boolean okay = true;
+            for(int j = 0; j < 7; j++) { //일주일 하나하나
+                int nowday = (startday + j) % 7;
+                if(cal(timelogs[idx][j]) - cal(schedules[i]) > 10 && nowday != 0 && nowday != 6) {
+                    okay = false;
+                    break;
+                }
+            }
+            idx++;
+            if(okay) answer++;
+        }
+        return answer;
+    }
+    
+    int cal(int time) {
+        int min = 0;
+        min = 60 * (time / 100) + time % 100;
+        return min;
+    }
+}
