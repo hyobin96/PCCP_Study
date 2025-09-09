@@ -1,0 +1,56 @@
+//풀이 시간 : 30분
+//시간 복잡도 : O((n/5) * len)
+//코드 설명 : dfs + 백트래킹을 통한 조합 구현
+//취약한 부분 : 조합 코드좀 다시 봐야겠다, 나올때마다 힘듦..
+
+class Solution {
+    int n, len;
+    int[][] q;
+    int[] ans;
+    int answer = 0;
+    
+    public int solution(int n, int[][] q, int[] ans) {
+        this.n = n;
+        this.q = q;
+        this.ans = ans;
+        len = q.length;
+        int[] comb = new int[5];
+        
+        dfs(1, comb, 0);
+        return answer;
+    }
+    
+    void dfs(int idx, int[] comb, int depth) {
+        if(depth == 5) {
+            if(check(comb)) answer++;
+            return;
+        }
+        
+        if(idx > n) return;
+        
+        comb[depth] = idx;
+        dfs(idx + 1, comb, depth + 1);
+        
+        dfs(idx + 1, comb, depth);
+    }
+    
+    //현재 조합 최종 확인
+    boolean check(int[] comb) {
+        for(int i = 0; i < len; i++) {
+            int cnt = 0;
+            for(int j = 0; j < 5; j++) {
+                if(contains(comb, q[i][j])) cnt++;
+            }
+            if(cnt != ans[i]) return false;
+        }
+        return true;
+    }
+    
+    //comb 배열에 num이 있는지 확인
+    boolean contains(int[] comb, int num) {
+        for(int i = 0; i < comb.length; i++) {
+            if(comb[i] == num) return true;
+        }
+        return false;
+    }
+}
