@@ -1,0 +1,104 @@
+//풀이 시간 : 30분
+//시간 복잡도 : O(R * N^2 * M^2)
+//코드 설명 : bfs를 통해 바깥에서 접근 가능한지 체크
+//취약한 부분 : 풀이길이를 줄이기?
+
+import java.util.*;
+class Solution {
+    int[][] arr;
+    int N, M;
+    char[][] storageChar;
+    public int solution(String[] storage, String[] requests) {
+        int answer = 0;
+        N = storage.length;
+        M = storage[0].length();
+        arr = new int[N][M];
+        for(int i = 0; i < N; i++) {
+            for(int j = 0; j < M; j++) {
+                arr[i][j] = 1; //그 위치에 있으면 1로 표시
+            }
+        }
+        storageChar = new char[N][M];
+        for(int i = 0; i < N; i++) {
+            for(int j = 0; j < M; j++) {
+                storageChar[i][j] = storage[i].charAt(j); //이후 풀이 간편화를 위해 char배열로 다시 만듦
+            }
+        }
+        for(int i = 0; i < requests.length; i++) {
+            if(requests[i].length() == 2) {
+                pullAll(requests[i].charAt(0)); //있으면 다 뽑기
+            } else {
+                pullSide(requests[i].charAt(0)); //바깥에서 접근 가능하면 뽑기
+            }
+        }
+        
+        for(int i = 0; i < N; i++) {
+            for(int j = 0; j < M; j++) {
+                if(storageChar[i][j] != '0') {
+                    answer++;
+                }
+            }
+        }
+        return answer;
+    }
+    
+    void pullSide(char c) {
+        List<int[]> pullArr = new ArrayList<>();
+        for(int i = 0; i < N; i++) {
+            for(int j = 0; j < M; j++) {
+                if(storageChar[i][j] == c && canPull(i, j)) {
+                    pullArr.add(new int[]{i, j});
+                }
+            }
+        }
+        for(int[] can : pullArr) {
+            arr[can[0]][can[1]] = 0;
+            storageChar[can[0]][can[1]] = '0';
+        }
+    }
+    
+    void pullAll(char c) {
+        for(int i = 0; i < N; i++) {
+            for(int j = 0; j < M; j++) {
+                if(storageChar[i][j] == c) {
+                    arr[i][j] = 0;
+                    storageChar[i][j] = '0';
+                }
+            }
+        }
+    }
+    
+    boolean canPull(int x, int y) {
+        boolean ans = false;
+        
+        Queue<int[]> queue = new LinkedList<>();
+        boolean[][] visited = new boolean[N][M];
+        queue.add(new int[]{x, y});
+        visited[x][y] = true;
+        
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+        
+        if(x == 0 || x == N-1 || y == 0 || y == M-1) {
+            ans = true;
+        }
+        
+        while(!queue.isEmpty()) {
+            int[] now_node = queue.poll();
+            if(now_node[0] == 0 || now_node[0] == N-1 || now_node[1] == 0 || now_node[1] == M-1) {
+                ans = true;
+                break;
+            }
+            for(int i = 0; i < 4; i++) {
+                int r = now_node[0] + dr[i];
+                int c = now_node[1] + dc[i];
+                if(r >= 0 && r < N && c >= 0 && c < M && arr[r][c] == 0 && !visited[r][c]) {
+                    queue.add(new int[]{r, c});
+                    visited[r][c] = true;
+                }
+            }
+        }
+        
+        return ans;
+    }
+}
